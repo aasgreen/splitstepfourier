@@ -3,13 +3,30 @@
 \DeclareMathAlphabet{\mathscr}{OT1}{pzc}{m}{it}
 \usepackage{epsfig, graphicx}
 \usepackage{verbatim}
+\renewcommand{\v}[1]{\ensuremath{\mathbf{#1}}} % for vectors
+\newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}} 
+% for vectors of Greek letters
+\newcommand{\grad}[1]{\gv{\nabla} #1} % for gradient
+\let\divsymb=\div % rename builtin command \div to \divsymb
+\renewcommand{\div}[1]{\gv{\nabla} \cdot #1} % for divergence
+\newcommand{\curl}[1]{\gv{\nabla} \times #1} % for curl
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}} 
+\newcommand{\pdd}[2]{\frac{\partial^2 #1}{\partial #2^2}} 
+% for double partial derivatives
 \title{Non-linear Pulse Propogation: Split-Step Style}
 \author{Adam A. S. Green}
 \begin{document}
 \bibliographystyle{plain}
 \maketitle
 \section{Introduction}
+\begin{alignat}{2}
+       \div{E} &= \frac{\rho}{\epsilon_0} &\qquad \div{B} &=0\\
+       \curl{E} &=- \pd{B}{t}  & \curl{B} &= \mu_0 + \mu_0 \epsilon_0 \pd{E}{t} 
+       \end{alignat}
 
+\begin{equation}
+\pd{U}{\xi}= \frac{is}{2} \pdd{U}{t} + i N^2 |U|^2U 
+\end{equation}
 \end{document}
 
 
