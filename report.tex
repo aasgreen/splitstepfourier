@@ -1,5 +1,9 @@
-\documentclass[12pt]{article}
-\usepackage{amssymb, amsmath, hyperref}
+\documentclass[12pt, titlepage]{article}
+\usepackage{amssymb, amsmath, hyperref,setspace}
+\usepackage[margin=1in]{geometry}
+\usepackage{bbm}
+\usepackage{color}
+\usepackage{commath}
 \DeclareMathAlphabet{\mathscr}{OT1}{pzc}{m}{it}
 \usepackage{epsfig, graphicx}
 \usepackage{verbatim}
@@ -10,23 +14,62 @@
 \let\divsymb=\div % rename builtin command \div to \divsymb
 \renewcommand{\div}[1]{\gv{\nabla} \cdot #1} % for divergence
 \newcommand{\curl}[1]{\gv{\nabla} \times #1} % for curl
-\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}} 
-\newcommand{\pdd}[2]{\frac{\partial^2 #1}{\partial #2^2}} 
 % for double partial derivatives
 \title{Non-linear Pulse Propogation: Split-Step Style}
 \author{Adam A. S. Green}
 \begin{document}
+\begin{spacing}{1.1}
 \bibliographystyle{plain}
 \maketitle
+\begin{abstract}
+This is the abstract
+\end{abstract}
+
 \section{Introduction}
+
+Ultimately, the information is encoded onto photons. (How? Modulation? Different frequencies?). The interaction
+of these photons and the fibre that carries them is completely described by Maxwell's equations. With most
+fibers [cite corning smf], a linear description usually sufficies. 
+
+However, if the pulse intensity becomes high enough, or if the fibre is specifically made, one can obtain
+non-linear effects. 
+
+This leads to a very rich field of the study of non-linear propogation of light, giving rise to a rich array
+of phenomena: solitons, filimentation, Raman Scattering, Fibre Lasers, [find citations for them all]
+
+In this paper, I will give a broad introduction to the field. 
+
+\subsection{Linear and Nonlinear Effects}
+
+In media, Maxwell's equations become modified with the introduction of the displacement field, $D = \epsilon_0 E + P$ , where $P$ is the induced polarization of the medium, and $E$ is the electric field. There is also a 
+modification to the magnetic field in a similar way, but most of the material we will be studying have a
+neglegible magnetic polarizability.
+
+If the response of the material is linear, then we can write $P = \chi E$, and our Maxwell's equations are
+once again, tractable.
+
+(Show how the equations are changed).
+
+In the presence of non-linearities, or large optical pulses (need to read Boyd about this), we Taylor expand
+the response of the field:
+$\v{P}$
+\begin{equation}
+\v{P}(t) = \epsilon_0  \left( \chi^{(1)} \v{E}(t) + \chi^{(2)} \v{E}^2(t) + \chi^{(3)} \v{E}^3(t) +...\right)
+\end{equation}
+
+Manipulating this into a wave equation form, we get:
+\begin{equation}
+\nabla^2 \v{E} - \frac{1}{c^2} \pd[2]{\v{E}}{t} = \mu_0 \pd[2]{\v{P}_L}{t} + \mu_0 \pd[2]{\v{P}_{NL}}{t}
+\end{equation}
 \begin{alignat}{2}
        \div{E} &= \frac{\rho}{\epsilon_0} &\qquad \div{B} &=0\\
        \curl{E} &=- \pd{B}{t}  & \curl{B} &= \mu_0 + \mu_0 \epsilon_0 \pd{E}{t} 
        \end{alignat}
-
+By preforming some manipulations, these equations can be massaged into the familiar form of 
 \begin{equation}
-\pd{U}{\xi}= \frac{is}{2} \pdd{U}{t} + i N^2 |U|^2U 
+\pd{U}{\xi}= \frac{is}{2} \pd[2]{U}{t} + i N^2 |U|^2U 
 \end{equation}
+\end{spacing}
 \end{document}
 
 
