@@ -1,0 +1,157 @@
+\documentclass[12pt, titlepage]{article}
+\usepackage{amssymb, amsmath, hyperref,setspace}
+\usepackage[margin=1in]{geometry}
+\usepackage{bbm}
+\usepackage{color,parskip}
+\usepackage{commath}
+\DeclareMathAlphabet{\mathscr}{OT1}{pzc}{m}{it}
+\usepackage{epsfig, graphicx}
+\usepackage{verbatim}
+\renewcommand{\v}[1]{\ensuremath{\mathbf{#1}}} % for vectors
+\renewcommand{\pd}[2]{\frac{\partial #1}{\partial #2}} 
+\newcommand{\pdd}[2]{\frac{\partial^2 #1}{\partial #2^2}}
+
+% for partial derivatives
+\newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}} 
+% for vectors of Greek letters
+\newcommand{\grad}[1]{\gv{\nabla} #1} % for gradient
+\let\divsymb=\div % rename builtin command \div to \divsymb
+\renewcommand{\div}[1]{\gv{\nabla} \cdot #1} % for divergence
+\newcommand{\curl}[1]{\gv{\nabla} \times #1} % for curl
+% for double partial derivatives
+\title{Non-linear Pulse Propogation: Split-Step Style}
+\author{Adam A. S. Green}
+\begin{document}
+\begin{spacing}{1.1}
+\bibliographystyle{plain}
+\maketitle
+\begin{abstract}
+Nonlinear fiber provides many revolutionary tools to the scientific community[cite nobel prize, other metrology stuff from the review paper]\cite{dudrev}.
+
+Yet understand the dynamics of optical pulses propogating fundamentally comes down to understand the Non-linear Schrodinger Equation. Although it is a non-linear pde, it is very tractable through pseudospectral numerical methods such as the split-step fourier transform\cite{gorovind}.
+
+I will review the theory behind the propogation of non-linear pulses, and then show the results of some of simulations of pulse propogation. 
+
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+The very rich field of non-linear fiber optics has contributed much to the fields of metrology~\cite{dudrev} and others.
+Physically, it is gives rise to many interesting, well-studied pheneomena that prove to be of continuing interest to the scientific community.\cite{dudrev,zhu}
+
+As with any electromagnetic phenomena, the theory of non-linear fibers is firmly rooted in Maxwell's equations. The familiar linear form is modified in the presence of a dieletric medium (non-linear fiber), which gives rise to a polarization. Usually, this polarization can be thought of as being linearly dependent on the applied field. However, in the presence of large amplitude pulses (such as one would get with ultra-short pulses), the $E$ field becomes large enough to
+sample non-linear effects. 
+These effects can be enhanced by using specially designed, highly-non-linear fiber (HLNF).
+
+Instead of the familiar Helmholtz equation, in the non-linear regime, we get a non-seperable, non-linear PDE equation known as the Non-linear Schrodinger Equation (NLSE).
+
+The study of non-linear pulse propogation through fiber can largely
+be encapsulated by the NLSE. The remainder of the paper is devoted to deriving, understand and sovling the NLSE for regimes of physical interest.
+
+\section{Nonlinear Schrodinger Wave Equation}
+As outlined in the Introduction~\ref{sec:intro}, in the presence of a dielectric medium, Maxwell's equations become modified into:\begin{alignat}{2}
+       \div{D} &= \frac{\rho}{\epsilon_0} &\qquad \div{B} &=0\\
+       \curl{D} &=- \pd{B}{t}  & \curl{B} &= \mu_0 + \mu_0 \epsilon_0 \pd{E}{t} 
+       \end{alignat}
+Where $D$ is the displacement field, defined as 
+\begin{equation}
+D = \epsilon_0 E + P,
+\end{equation}
+where $P$ is the polarization field. 
+There is a modification to the magnetic field in a similar way, but most of the material we will be studying have a
+neglegible magnetic polarizability.
+
+For fields that are detuned from the resonance of the material~\cite{boyd}, we can expand out the polarization as a Taylor series of $E$:
+
+\begin{equation}
+\v{P}(t) = \epsilon_0  \left( \chi^{(1)} \v{E}(t) + \chi^{(2)} \v{E}^2(t) + \chi^{(3)} \v{E}^3(t) +...\right)
+\end{equation}
+Now, inserting this back into Maxwell's equations, and massaging it, we can obtain the following semi-familiar form:
+
+\begin{equation}
+\nabla^2 \v{E} - \frac{1}{c^2} \pdd{\v{E}}{t} = \mu_0 \pdd{\v{P}_L}{t} + \mu_0 \pdd{\v{P}_{NL}}{t}
+\end{equation}
+
+And with some massaging, we obtain the following normalized form. \textbf{need to actually show the massaging}
+\begin{equation}
+\label{nlse}
+\pd{U}{\xi}= \underbrace{\frac{is}{2} \pdd{U}{t}}_\text{dispersion} + \underbrace{i N^2 |U|^2U}_\text{non-linear SPM} 
+\end{equation}
+
+\subsection{Dispersion}
+
+As derived in the previous section, the dispersive term in the NLSE is given as:
+\[
+\hat{D} = \frac{is}{2}\pdd{U}{t}
+\]
+
+By setting the non-linear term to zero in the NLS equation, we can describe what action this term has on the pulse propogation. It is worth noting that, with the non-linear term set to zero, the NLS looks like the Schrodinger equation, under a space-time reflection.
+
+From our intuition about the SE, we know that if a free particle is localized to a pulse, as time progresses it becomes more and more delocalized in space. Similarily, the process of dispersion in the NLS acts such that as the pulse propogates through space, it becomes more and more delocalized in time, ie. pulse delay.
+
+\textbf{try to get some simulations that show only the effects of dispersion. Set the non-linear term to zero some how}
+
+The main act of dispersion is to delocalize the pulse in time.
+\subsection{Non-linear}
+Focussing now on the non-linear term, we can set the dispersive term in the NLS to zero, and we get 
+\[
+\pd{U}{\xi}= i N^2 |U|^2U 
+\]
+This equation can also be analytically solved~\cite{gorovind}, and yields solutions of the form.
+
+\[
+U(L,T) = U(0,T)\exp\left[{i\left|U(0,T)\right|^2(L_\text{eff}/L_\text{NL}})\right]
+\]
+
+This is adding a chirp in the time domain. From lecture, we know that adding chirp in the time domain will act to increase the spectral bandwidth. Generally, the act of the non-linearity will be to increase the spectral bandwith.
+
+Formally, the time-rate-change of the instantaneous frequency across the pulse is given by:
+\[
+\delta \omega = -\pd{\phi_\text{NL}}{T} = -\left(\frac{L_\text{eff}}{L_\text{NL}} \pd{|U(0,T)|^2}{T}\right)
+\]
+which varies with the power across the initial pulse.
+This is the phenomena known as Self-Phase-Modulation (SPM).
+In the frequency domain, things are a little more complicated. With no chip on the incoming pulse, the spectral bandwidth will increase. However, if there is a chirped input pulse, the SPM will
+interact with the non-trivial phase, and could lead to either spectral broadening, or spectral compression~/cite{gorovind}.
+
+In general, the two dynamics that we have looked at will interfere and interact in a non-trivial way. Broadely, however, we can see how the effects of dispersion (spectral narrowing) could be counteracted by the effects of SPM (spectral broadening, sometimes).
+
+In fact, if the two terms are roughly proporotional, then they can
+actually cancel out. This leads to the phenomena of solitons-- solutions to the NLS that can propogate, seemingly without the effects of dispersion. 
+
+There are roughly four regimes for the NLS, and they have to do with balancing the non-linear term, and the dispersive term.
+\begin{comment}
+ToDo:
+I still need to flush out this section more.
+Figures: I want two figures-- one that shows the action of each term in the nsl
+also see the thesis, there is some helpful exposition in there.
+\end{comment}
+\section{Numericall Solving The NLS Equation}
+Although the NLS can be solved analytically, truly understanding the dynamics requires use of numerical simulation. Out of the two options available--finite element modelling, and pseudospectral methods-- I will be focussing on the psuedospectral method of Fourier decomposition.
+
+In it , the fiber is approximated by dividing it up into subsequent regions. In each of these regions, either the non-linear term or the dispersive term will act. The dispersive term (as a linear derivative) is readily treated in Fourier space, where it becomes a constant term times the distance, and the non-linear term is easily treated in regular space.
+
+%need to include figure that shows divided fiber up.
+
+%basically, copy gorovind for the details. Cite it heavily, as well as washburn's thesis.
+
+I have coded up a version of the split-step fourier method. However, to truly simuluate the dynamics, and more sophisticated approach is needed. Using a developed code base such as laserFOAM\textcolor{red}{cite laser foam}, we can make use of
+already developed code and adapt it to our needs. 
+
+%include figure that is fairly general, just to give an idea of what is produced. Talk about some of the features in a similar way to the review paper.
+
+
+\begin{figure}[H]
+ \centering
+          \scalebox{.3}{\includegraphics{./fig/introfig}}
+                    \caption{Results from a numerical simulation by Dudley et al [cite]. This shows the action of dispersion and SPM on an incident sech pulse. Note that at first, dispersion dominates for the first .5cm, it is only after that that more complex dynamics arise. \textbf{need to talk more about this dynamics}}
+                    
+                              \label{intial spectrum}
+                              \end{figure}
+
+\end{spacing}
+\bibliography{report}{}
+\end{document}
+
+

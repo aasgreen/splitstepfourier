@@ -1,0 +1,23 @@
+\begin{thebibliography}{1}
+
+\bibitem{gorovind}
+Gorvind~P. Agrawal.
+\newblock {\em Nonlinear Fiber Optics}.
+\newblock Elsevier Inc, 2007.
+
+\bibitem{boyd}
+Robert Boyd.
+\newblock {\em Nonlinear Optics}.
+\newblock Elsevier Inc, 2007.
+
+\bibitem{dudrev}
+John~M. Dudley, Goery Gentry, and Stephane Coen.
+\newblock Supercontinuum generation in photonic crystal fiber.
+\newblock {\em Rev. Mod. Phys.}, 78, 2006.
+
+\bibitem{zhu}
+Zhaoming Zhu and Thomas~G. Brown.
+\newblock Polarization properties of supercontriuum spectra generated in
+  bifrefringent photonic crystal fibers, 2004.
+
+\end{thebibliography}

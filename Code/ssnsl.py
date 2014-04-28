@@ -4,6 +4,7 @@ import numpy as np
 import math
 import param
 import matplotlib.pyplot as plt
+from matplotlib import animation
 '''This program will do it's best to compute the split-step 
 fourier transform to model nonlinear optical pulse propogation'''
 
@@ -31,7 +32,7 @@ if __name__ == '__main__':
     plt.title('Power of Input Pulse')
     plt.xlabel('Time')
     plt.subplot(2,1,2)
-    plt.plot(np.fft.ifftshift(np.fft.fftfreq(param.nt,d=param.dtau)), np.absolute(spec)**2, 'ko-')
+    plt.plot(np.fft.ifftshift(np.fft.fftfreq(param.nt,d=param.dtau)), np.absolute(spec*param.dtau)**2, 'ko-')
     plt.title('Power of Spectrum')
     plt.xlabel('Frequency')
     #Store Dispersion
@@ -39,17 +40,73 @@ if __name__ == '__main__':
     hhz = 1j*param.N**2*param.deltaz
 
     #use symmetrized split step method
-
+    A = np.zeros((param.stepNum,param.nt))
+    Wt = np.zeros((param.stepNum,param.nt))
     temp =uu*np.exp(np.absolute(uu)**2*hhz/2)
     for x in range(int(param.stepNum)):
         fTemp= np.fft.fft(temp)*dispersion
         uu = np.fft.ifft(fTemp)
         temp= uu*np.exp(np.absolute(uu)**2*hhz)
+        A[x,:]=np.fft.fftshift(fTemp)
+        Wt[x,:]=(temp)
         print x
     uu = temp*np.exp(-np.absolute(uu)**2*hhz/2) #Final Field
-    temp = np.fft.fftshift(np.fft.fft(uu)*(param.nt*param.dtau)/math.sqrt(2*math.pi))
+    temp = np.fft.fftshift(np.fft.fft(uu))
+    plt.close('all')
     f2 = plt.figure()
     plt.subplot(2,1,1)
     plt.plot(tau, np.absolute(uu)**2, 'ko-')
     plt.subplot(2,1,2)
-    plt.plot(freq, np.absolute(temp)**2, 'ko-')
+    plt.plot(freq, np.absolute(temp*param.dtau)**2, 'ko-')
+
+    z = np.linspace(0,param.distance,num=param.stepNum)
+    print 'Test 1'
+
+    f=plt.figure()
+    plt.subplot(121)
+    print 'Test 2'
+    A[np.abs(A)==0]=10**-14
+    Aout = 10*np.log10(np.abs(A)**2)
+    print 'Test3'
+    MLmax = np.max(Aout)
+    plt.pcolormesh(freq, z, Aout,vmax=MLmax, vmin=MLmax-40)
+    plt.autoscale(tight=True)
+    print 'test 4'
+    plt.xlabel('(f-f_0)')
+    plt.ylabel('z')
+    
+    plt.subplot(122)
+    Wt[np.abs(Wt)==0]=10**-14
+    print 'test5'
+    Wtout = 10*np.log10(np.abs(Wt)**2)
+    WTmax = np.max(Wtout)
+    plt.pcolormesh(tau, z, Wtout,vmax=WTmax, vmin=WTmax-40)
+    print 'test6'
+    plt.autoscale(tight=True)
+    plt.xlabel('(t-t0)')
+    plt.ylabel('z')
+    print 'test7'
+    f.savefig('nzero.eps')    
+
+    #Create animation
+
+#    fig = plt.figure()
+#    ax = plt.axes(xlim=(-9,9), ylim=(0,10))
+#    line,= ax.plot([],[],lw=2)
+
+    def init():
+        line.set_data([],[])
+        return line,
+
+    def animate(i):
+        x = freq
+        y = A[i,:]
+        line.set_data(x,y)
+        return line,
+
+#    anim = animation.FuncAnimation(fig, animate, init_func=init, frames = np.int(param.stepNum), interval = 40,blit=True)
+
+ #   anim.save('waveprop.mp4', fps=30)
+
+    print 'test 8'
+    plt.show()

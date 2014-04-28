@@ -1,9 +1,9 @@
 import math
 import numpy as np
 #Input Parameters
-distance=10
-beta2=1
-N=2
+distance=1
+beta2=-1
+N=.27
 mshape=0
 chirp0=0
 
@@ -11,6 +11,7 @@ chirp0=0
 nt=1024
 Tmax=32
 stepNum=round(20.*distance*N**2.)
+stepNum=40
 deltaz=distance/stepNum
 dtau=(2.*Tmax)/nt
 
