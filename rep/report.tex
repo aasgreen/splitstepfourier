@@ -37,17 +37,34 @@ I will review the theory behind the propogation of non-linear pulses, and then s
 \section{Introduction}
 \label{sec:intro}
 
-The very rich field of non-linear fiber optics has contributed much to the fields of metrology~\cite{dudrev} and others.
+The very rich field of non-linear fiber optics has contributed much to the fields of metrology, WDM sources, tomography~\cite{gor}.
 Physically, it is gives rise to many interesting, well-studied pheneomena that prove to be of continuing interest to the scientific community.\cite{dudrev,zhu}
 
-As with any electromagnetic phenomena, the theory of non-linear fibers is firmly rooted in Maxwell's equations. The familiar linear form is modified in the presence of a dieletric medium (non-linear fiber), which gives rise to a polarization. Usually, this polarization can be thought of as being linearly dependent on the applied field. However, in the presence of large amplitude pulses (such as one would get with ultra-short pulses), the $E$ field becomes large enough to
+As an example, supercontinuum generation in non-linear fibers directly contributed to the ability to make self-referenced mode-locked lasers-- a frequency comb, which in turn led to stunning develoments with the metrology and ultrafast community.~\textcolor{red}{cite nobel prize, maybe some diddams papers}
+Although the dynamics present in the non-linear regime can be very complex, it is all firmly rooted in Maxwell's equations.
+
+
+The familiar linear form is modified in the presence of a dieletric medium (non-linear fiber), which gives rise to a polarization within the medium.
+In the linear treatment, this polarization can be thought of as being linearly dependent on the applied field.
+However, in the presence of large amplitude pulses (such as one would get with ultra-short pulses), the $E$ field becomes large enough to
 sample non-linear effects. 
 These effects can be enhanced by using specially designed, highly-non-linear fiber (HLNF).
 
-Instead of the familiar Helmholtz equation, in the non-linear regime, we get a non-seperable, non-linear PDE equation known as the Non-linear Schrodinger Equation (NLSE).
+Without a medium present, Maxwell's equations can be manipulated into the Helmholtz equation,
+\begin{equation}
+\nabla^2 \v{E} + k^2 \v{E} = 0
+\end{equation}
+Instead of the familiar Helmholtz eq, in the non-linear regime, we get a non-seperable, pde equation. With several simplifications, this equation can be written as the Non-linear Schrodinger equation (NLS).
+\[
+\label{eq:nls}
+\pd{u}{z} =i \frac{\beta_2}{2}\pdd{u}{t}-i\gamma|u|^2u 
+\]
 
-The study of non-linear pulse propogation through fiber can largely
-be encapsulated by the NLSE. The remainder of the paper is devoted to deriving, understand and sovling the NLSE for regimes of physical interest.
+The non-linear schrodinger equation can describe many different phenemena, making it worthy of study in its own right. However, I will be focussing on it with regards to solutions of wave-propogation in non-linear media.
+
+Although not a complete description, the NLS equation does a fairly good job at explaining the dynamics of pulse propogation in non-linear media.
+In order to delve into some of the more interesting phenomena, we will have to generalize it to the General Non-Linear Schrodinger equation, which takes into account higher order dispersive effects and other non-linear processes.
+The remainder of the paper is devoted to deriving, understand and solving the NLSE for regimes of physical interest.
 
 \section{Nonlinear Schrodinger Wave Equation}
 As outlined in the Introduction~\ref{sec:intro}, in the presence of a dielectric medium, Maxwell's equations become modified into:\begin{alignat}{2}
@@ -67,19 +84,52 @@ For fields that are detuned from the resonance of the material~\cite{boyd}, we c
 \begin{equation}
 \v{P}(t) = \epsilon_0  \left( \chi^{(1)} \v{E}(t) + \chi^{(2)} \v{E}^2(t) + \chi^{(3)} \v{E}^3(t) +...\right)
 \end{equation}
-Now, inserting this back into Maxwell's equations, and massaging it, we can obtain the following semi-familiar form:
+where $P_L$ is the linear polarization term, and $P_\text{NL}$ is the non-linear term.
+In the electric dipole approximation they can be related to the electric field as:
+\begin{align}
+P_\text{N} &= \epsilon_0 \int^\infty_\infty \chi^{(1)}(t-t')E(\v{r},t')dt'\\
+P_\text{NL} &= \frac{\epsilon_0}{2\pi}\int^\infty_\infty dt_1 \int^\infty_\infty dt_2\int^\infty_\infty dt_3 \chi^{(3)}(t-t_1,t-t_2,t-t_3)\cdot E(\v{r},t_1)E(\v{r},t_2)E(\v{r},t_3)
+\end{align}
+We don't have to worry about second order effects, as the structure of silica has a symmetry that prevents second order effects from manifesting.
+Now, inserting this back into Maxwell's equations, and massaging it, we can obtain the following semi-familiar form, which is clearly a propogation equation:
 
 \begin{equation}
 \nabla^2 \v{E} - \frac{1}{c^2} \pdd{\v{E}}{t} = \mu_0 \pdd{\v{P}_L}{t} + \mu_0 \pdd{\v{P}_{NL}}{t}
 \end{equation}
 
-And with some massaging, we obtain the following normalized form. \textbf{need to actually show the massaging}
+With the electric-dipole approximation, and the slowly-varying-wave approximation, and the above relation between $\v{P}$ and $\v{E}$, we can finally obtain the NLS equation:
 \begin{equation}
 \label{nlse}
 \pd{U}{\xi}= \underbrace{\frac{is}{2} \pdd{U}{t}}_\text{dispersion} + \underbrace{i N^2 |U|^2U}_\text{non-linear SPM} 
 \end{equation}
+where it has been normalized and made dimensionless. It will prove useful to discuss these dimensionless quantities when we focus on each term individually.
 
+The time scaling is given by:
+\[ 
+\tau = \frac{T}{T_0}=\frac{t-z/v_g}{T_0}
+\]
+where $T_0$ is the initial pulse width, and the usual trick of boosting into a reference frame that travels alongside the pulse has been used to eliminate the effects of first order dispersion.
+
+There are two length scales; one for disperion with $\beta_2$ as the dispersive parameter ($~ps^2/nm$)
+\[
+L_D = \frac{T0^2}{|\beta_2|}
+\]
+and one for non-linearites;
+\[
+L_NL = \frac{1}{\gamma P_0}
+\]
+with $gamma$ being the non-linear parameter, and $P_0$ being the peak pulse.
+
+With two length scales, there will be 4 regimes. 
+\begin{align}
+L \ll L_D&,\qquad L \ll L_\text{NL}\\
+L \sim L_D&,\qquad L \ll L_\text{NL}\label{eq:disp} \text{(Dispersive regime)}\\
+L \ll L_D&,\qquad L ~\sim L_\text{NL}\label{eq:nl} \text{(Non-linear regime)}\\
+L \sim L_D&,\qquad L\sim L_\text{NL} \label{eq:solregime}\text{(Soliton regime)}\\
+\end{align}
 \subsection{Dispersion}
+
+Looking at the Dispersive regime first\eqref{eq:disp}, we can formally set $\gamma = 0$ to put ourselves definitively in the correct regime.
 
 As derived in the previous section, the dispersive term in the NLSE is given as:
 \[
@@ -90,11 +140,27 @@ By setting the non-linear term to zero in the NLS equation, we can describe what
 
 From our intuition about the SE, we know that if a free particle is localized to a pulse, as time progresses it becomes more and more delocalized in space. Similarily, the process of dispersion in the NLS acts such that as the pulse propogates through space, it becomes more and more delocalized in time, ie. pulse delay.
 
-\textbf{try to get some simulations that show only the effects of dispersion. Set the non-linear term to zero some how}
-
 The main act of dispersion is to delocalize the pulse in time.
+
+Formally, the NLS with $\gamma=0$ has a simple analytic solution in the Fourier domain, given by:
+\[
+U(z,\omega) = U(0,\omega)\exp \left( \frac{i}{2} \beta_2 \omega^2 z\right)
+\]
+
+Upon inspection we can note that the dispersive term won't generate any new frequencies. Its action is to simple rearrange the spectral phase of the incident pulse. We can illustrate the effect that this has in the time domain by looking at the specific example of a Gaussian input pulse. In that case, the time domain behaviour is given by~\cite{gorovind}
+\[
+U(z,T) = \frac{1}{(1 + (z/L_D)^2)^{1/2}} \exp[-\frac{T^2}{2*T0(1+(z/L_D)^2)^(1/2)}]
+\]
+
+
+The width of this Gaussian goes as:
+\[
+\delta \sim T0(1+(z/L_D)^2)^(1/2)
+\]
+
+which will spread the pulse apart temporally. This confirms our physical intuition that we developed in parallel with the regular Schrodinger equation.
 \subsection{Non-linear}
-Focussing now on the non-linear term, we can set the dispersive term in the NLS to zero, and we get 
+Turning our attention to the non-linear regime\eqref{eq:nl}, we can set $\beta2=0$. In doing so, we get:
 \[
 \pd{U}{\xi}= i N^2 |U|^2U 
 \]
@@ -104,7 +170,7 @@ This equation can also be analytically solved~\cite{gorovind}, and yields soluti
 U(L,T) = U(0,T)\exp\left[{i\left|U(0,T)\right|^2(L_\text{eff}/L_\text{NL}})\right]
 \]
 
-This is adding a chirp in the time domain. From lecture, we know that adding chirp in the time domain will act to increase the spectral bandwidth. Generally, the act of the non-linearity will be to increase the spectral bandwith.
+This is adding a chirp in the time domain. From lecture, we know that adding chirp in the time domain can (in the simplest case) act to increase the spectral bandwidth. Generally, the act of the non-linearity will be to increase the spectral bandwith.
 
 Formally, the time-rate-change of the instantaneous frequency across the pulse is given by:
 \[
@@ -112,6 +178,17 @@ Formally, the time-rate-change of the instantaneous frequency across the pulse i
 \]
 which varies with the power across the initial pulse.
 This is the phenomena known as Self-Phase-Modulation (SPM).
+\begin{figure}[h!]
+ \centering
+          \scalebox{.6}{\includegraphics{./fig/nodisp}}
+                    \caption{This shows the effects of what happens to the pulse when the
+                    dispersive term is set to zero. Observe how the temporal shape does not change
+                , but how the SPM generates new frequencies all along the length of the fiber.}
+                    
+                              \label{fig:nodisp}
+                              \end{figure}
+
+
 In the frequency domain, things are a little more complicated. With no chip on the incoming pulse, the spectral bandwidth will increase. However, if there is a chirped input pulse, the SPM will
 interact with the non-trivial phase, and could lead to either spectral broadening, or spectral compression~/cite{gorovind}.
 
@@ -127,22 +204,45 @@ I still need to flush out this section more.
 Figures: I want two figures-- one that shows the action of each term in the nsl
 also see the thesis, there is some helpful exposition in there.
 \end{comment}
-\section{Numericall Solving The NLS Equation}
+\section{Numerically Solving The NLS Equation}
 Although the NLS can be solved analytically, truly understanding the dynamics requires use of numerical simulation. Out of the two options available--finite element modelling, and pseudospectral methods-- I will be focussing on the psuedospectral method of Fourier decomposition.
 
 In it , the fiber is approximated by dividing it up into subsequent regions. In each of these regions, either the non-linear term or the dispersive term will act. The dispersive term (as a linear derivative) is readily treated in Fourier space, where it becomes a constant term times the distance, and the non-linear term is easily treated in regular space.
+\begin{figure}[h!]
+ \centering
+          \scalebox{.5}{\includegraphics{./fig/fiber}}
+                    \caption{The fiber is divided up into regions where each part of the NLSE acts in turn. In between, the pulse is fourier transformed.}
+                    
+                              \label{fig:fiber}
+                              \end{figure}
+
 
 %need to include figure that shows divided fiber up.
 
 %basically, copy gorovind for the details. Cite it heavily, as well as washburn's thesis.
 
-I have coded up a version of the split-step fourier method. However, to truly simuluate the dynamics, and more sophisticated approach is needed. Using a developed code base such as laserFOAM\textcolor{red}{cite laser foam}, we can make use of
-already developed code and adapt it to our needs. 
+I have coded up a version of the split-step fourier method.
+
+
+\begin{figure}[h!]
+ \centering
+          \scalebox{.5}{\includegraphics{./fig/ls}}
+                    \caption{This is an example showing the results of the simulation. The code I created was based off of the code found in \textit{Nonlinear Fiber Optics}\cite{gorovind}
+                    Already, some very complicated dynamics are uncovered.
+                    We can see periodic behaviour indicitive of soliton formation.
+                    The initial soliton $\text{sech}(t)$ pulse seems to break up into two solitons, giving hints to the process of soliton fission-- a dynamic that is very important to supercontinuum generation.}
+                    
+                              \label{fig:initialex}
+                              \end{figure}
+
+However, to truly simuluate the dynamics, and more sophisticated approach is needed. While the code that I wrote was useful, it proved too inflexible to really explore a lot of the dynamics of non-linear pulse propogation. Using a developed code base such as laserFOAM\textcolor{red}{cite laser foam}, we can make use of
+already developed code and adapt it to our needs. In the future this will allow use to more easily take
+extend the simulations to look at other non-linear effects that can contribute~\cite{dudrev}.
 
 %include figure that is fairly general, just to give an idea of what is produced. Talk about some of the features in a similar way to the review paper.
 
 
-\begin{figure}[H]
+\begin{figure}[h!]
  \centering
           \scalebox{.3}{\includegraphics{./fig/introfig}}
                     \caption{Results from a numerical simulation by Dudley et al [cite]. This shows the action of dispersion and SPM on an incident sech pulse. Note that at first, dispersion dominates for the first .5cm, it is only after that that more complex dynamics arise. \textbf{need to talk more about this dynamics}}
@@ -150,7 +250,80 @@ already developed code and adapt it to our needs.
                               \label{intial spectrum}
                               \end{figure}
 
+\subsection{Solitons}
+The study of solitons is a rich field\textcolor{red}{find some soliton citations}. The NLS can be solved analyticall\textcolor{red}{find citation}, and one of the fundamental solutions is:
+\begin{equation}
+u(z_\text{eff}, \tau) = \text{sech}( 
+tau) \exp{i\eta/2}
+\end{equation}
+By inserting this solution into the split-step method that we have encoded, we can see that although the wave is distorted, it is distorted in a periodic way.
+\begin{figure}[h!]
+\centering
+         \scalebox{.5}{\includegraphics{./fig/bestsol}}
+                   \caption{When a sech pulse is inserted into the fiber and allowed to propogate, it essentially propogates without distortion-- periodically returning to it's intial state. }
+                   
+                             \label{bestsoliton}
+                             \end{figure}
+
+The soliton dynamics are fairly robust, occuring in many different regimes. The only condition is that the non-linear term and the dispersion term in the NLS equation are balanced, encoded succintly in the condition:
+
+\[
+\frac{L_D}{L_NL}=\frac{\gamma P_0 T_0^2}{|\beta_2|} \approx 1
+\]
+\subsection{Supercontinuum Generation}
+I will only briefly touch on this subject, although it is arguably the most broadly useful of the phenomena of non-linear propogation.
+Its development allowed the creation of frequency combs, for which Jan Hall\textcolor{red}{find citation} recieved the noble prize for.
+
+A frequency comb can be thought of quite simply as a train of delta functions in frequency space. Intuitively, we know that this is equivalent to a train of delta functions in time.
+Niavelly then, a mode-locked laser that was capable of producing a train of sharp pulses in time would be able to generate a frequency comb.
+There are two degrees of freedom in a train of delta function: the spacing between pulses ($f_\text{rep}$), and the offset from 0 ($f_0$).
+The spacing $f_\text{rep}$ can be measured directly. Unfortunately, the offset frequency $f_0$ provides a little more of a challenge because it is an absolute measurement. To make this, one has to reference the comb against itself in the following way.
+
+If the comb could be manipulated to cover a whole octave, then the measurement of $f_0$ can be done directly:
+
+\begin{equation}
+f_n = f_0+n*f_\text{ref},\\qquad f_{2n} = f_0 + 2n*f_\text{ref}
+\end{equation}
+
+So, if we double the $f_n$ pulse, and beat it against the $f_{2n}$ pulse, we will get two signals out at the sum and difference of these frequencies. The sum isn't very interesting, but the difference will give us $f_0$ directly.
+
+The actual process of $f-2f$ relies on generating a supercontinuum-- a pulse that spans an octace in frequency.
+The best known method to do this is to use non-linear fiber.
+In broad strokes, the input pulse train is sent into the non-linear fiber.
+The pulse breaks apart into fundamental solitons in a process known as soliton fission.
+As they travel through the media, they will spread apart in spectrum. These solitons then give off radiation, similar to the Cherokov effect where a particle travelling faster that the local speed of light will emit radiation.
+This radiation will fill in the gaps between solitons. The end result is a very messy looking, but octave spanning, spectrum.
+
+However, in order to properly simulate the dynamics of the process, the General Schrodinger Equation has to be used. This equation accounts for higher order dispersion effects, and also includes other non-linear effects, such as Raman scattering. 
+
+In total, the General Schrodinger Equation is given by:
+\textcolor{red}{write it down}
+
+Using code\footnote{based on the laserFOAM open-source code, and expanded by Gabe Y. and Dan M in Scott Diddams lab}, I was able to include the higher order effects of the General Schrodinger Equation.
+\begin{figure}[h!]
+ \centering
+          \scalebox{.5}{\includegraphics{./fig/dud}}
+                    \caption{This is a very rich figure.
+                    Initially, one can see strong spectral broadening at first.
+                    Very suddenly, the pulse breaks apart.
+                    A careful examination of the density plot shows that there are several distinct structures (perhaps solitons), amid the more constant intensity.
+                    There is a strong asymmetry that develops, which is largely due to the Raman effect which preferentialy acts towards the red wavelengths.
+                    This effect helps spread out the
+                    spectrum even more. Finally, the pulse can be seen to have been spectrally broadened from about $\delta \lambda \approx 200 nm$ to $\delta \lambda \approx 600 nm$.}
+                    
+\label{intial spectrum}
+\end{figure}
+
+Initially, one can see strong spectral broadening at first.
+Very suddenly, the pulse breaks apart.
+A careful examination of the density plot shows that there are several distinct structures (perhaps solitons), amid the more constant intensity.
+There is a strong asymmetry that develops, which is largely due to the Raman effect which preferentialy acts towards the red wavelengths.
+This effect helps spread out the
+spectrum even more. Finally, the pulse can be seen to have been spectrally broadened from about $\delta \lambda \approx 200 nm$ to $\delta \lambda \approx 600 nm$.\protect\footnotemark
+
+\footnotetext{The parameters are taken from \textit{Dudely et. al.}} 
 \end{spacing}
+
 \bibliography{report}{}
 \end{document}
 
